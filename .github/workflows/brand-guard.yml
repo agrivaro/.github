@@ -1,0 +1,105 @@
+name: Brand guard
+
+# Reusable workflow. Keeps checked-in copies of the Agrivaro brand from
+# drifting: the four canonical hex values must be present in the calling
+# repository, and every vendored logo SVG must be a byte-for-byte copy of a
+# file in the private agrivaro/branding repository's logos/ directory.
+#
+# The pins below mirror agrivaro/branding (logos/ + hexcode.md). Regenerate
+# them in the same change that updates the consumers:
+#
+#   sha256sum ../branding/logos/*.svg   # macOS: shasum -a 256
+#
+# Called from a consumer repository with:
+#
+#   jobs:
+#     brand:
+#       uses: agrivaro/.github/.github/workflows/brand-guard.yml@main
+#       with:
+#         brand_files: packages/frontend/src/globals.css
+#         asset_dirs: packages/frontend/public/brand
+
+on:
+  workflow_call:
+    inputs:
+      brand_files:
+        description: Files that must contain the four canonical hex values (space or newline separated).
+        required: true
+        type: string
+      asset_dirs:
+        description: Directories holding copies of canonical logo SVGs (space or newline separated).
+        required: true
+        type: string
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check brand copies
+        shell: bash
+        env:
+          BRAND_FILES: ${{ inputs.brand_files }}
+          ASSET_DIRS: ${{ inputs.asset_dirs }}
+        run: |
+          set -euo pipefail
+
+          colors="#153B34 #C3582B #030303 #F8F3EE"
+
+          # sha256 of every file in agrivaro/branding logos/ (01 and 02 are identical)
+          hashes="
+          aa48a9f42d20f06e3a119c51a37f376dd1348ab9a7fb0fb41cc0e96215a99fa2
+          71687a186f125880eb33bdac3bf33856497d588281ddbce3b4a19da95233495e
+          b0420ee438ac9a4951cd87b81cf918d02c8877675b07d800b7e9e6c260c88690
+          ebaa955ceb5f761efd6a912dfecfb570bd08b83a1f3f3ca2f01f3ea7da989232
+          4cb9a6c6b31c4d7e7516fe74ffc19ee48f6d06e5fee0d110652e77e801b85830
+          4021d4e7e31f38d34cc4cf4e079111e11c108f4860be3e7e884dcef25b96c1b7
+          ca1402e4b9299801b474bef0203296f3a5e84eb8b1fe81140c422bf81f4ab4f8
+          ae438c18dd2208d2e867c9eff114dc07f9588ebf43cf1b556e228eaedbc4202b
+          81bf9a8e4a4ea4bc2fd3d6fcb3058d4f6bd0d36147f5c7ac749475925f9009ee
+          6e4077ed59420f29d90ba622c5f9644d43c0b4988520d4c319faba9ffb8306da
+          d87eb58e1e7a31de23695c8a1d0661b787a3168bbb7bd126898e46fa210afba6
+          20bc0c19ae7e46b47ea52e384b5572a0d8118a6b50f9c91ca7e978b6c70fc777
+          1faccba67398b08dc7a9a3fa57bbc21f02f553d92df2dcfea0038e6275c1c930
+          "
+
+          failed=0
+
+          for file in $BRAND_FILES; do
+            [ -f "$file" ] || { echo "::error::missing file $file"; failed=1; }
+          done
+
+          for hex in $colors; do
+            found=""
+            for file in $BRAND_FILES; do
+              if [ -f "$file" ] && grep -qiF -- "$hex" "$file"; then found=1; break; fi
+            done
+            [ -n "$found" ] || { echo "::error::canonical colour $hex is missing from: $BRAND_FILES"; failed=1; }
+          done
+
+          for dir in $ASSET_DIRS; do
+            [ -d "$dir" ] || { echo "::error::missing directory $dir"; failed=1; }
+          done
+
+          files=$(for dir in $ASSET_DIRS; do
+            [ -d "$dir" ] && find "$dir" -type f -name '*.svg'
+          done | sort)
+
+          checked=0
+          while IFS= read -r file; do
+            [ -n "$file" ] || continue
+            checked=$((checked + 1))
+            hash=$(sha256sum "$file" | cut -d' ' -f1)
+            case "$hashes" in
+              *"$hash"*) ;;
+              *) echo "::error file=$file::not a byte-for-byte copy of a file in agrivaro/branding logos/"; failed=1 ;;
+            esac
+          done <<< "$files"
+
+          if [ "$checked" -eq 0 ]; then
+            echo "::error::no SVG brand assets found in: $ASSET_DIRS"; failed=1
+          fi
+
+          echo "brand guard: checked $checked SVG file(s)"
+          exit "$failed"

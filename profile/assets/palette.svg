@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900" role="img" aria-labelledby="title desc">
+  <title id="title">Agrivaro kleurpalet</title>
+  <desc id="desc">Vectorafbeelding met vier merkkleuren: groen, oranje, zwart en wit.</desc>
+
+  <defs>
+    <style>
+      .name {
+        font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+        font-size: 34px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+      .hex {
+        font-family: "Consolas", "Courier New", monospace;
+        font-size: 28px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+      }
+      .light-text { fill: #F8F3EE; }
+      .dark-text { fill: #030303; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1400" height="900" fill="#F8F3EE"/>
+
+  <rect x="80" y="80" width="1240" height="740" rx="28" fill="#FFFFFF" opacity="0.55"/>
+
+  <g transform="translate(120, 140)">
+    <rect x="0" y="0" width="560" height="280" rx="18" fill="#153B34"/>
+    <text x="36" y="90" class="name light-text">groen</text>
+    <text x="36" y="150" class="hex light-text">#153B34</text>
+  </g>
+
+  <g transform="translate(720, 140)">
+    <rect x="0" y="0" width="560" height="280" rx="18" fill="#C3582B"/>
+    <text x="36" y="90" class="name light-text">oranje</text>
+    <text x="36" y="150" class="hex light-text">#C3582B</text>
+  </g>
+
+  <g transform="translate(120, 480)">
+    <rect x="0" y="0" width="560" height="280" rx="18" fill="#030303"/>
+    <text x="36" y="90" class="name light-text">zwart</text>
+    <text x="36" y="150" class="hex light-text">#030303</text>
+  </g>
+
+  <g transform="translate(720, 480)">
+    <rect x="0" y="0" width="560" height="280" rx="18" fill="#F8F3EE" stroke="#030303" stroke-width="2"/>
+    <text x="36" y="90" class="name dark-text">wit</text>
+    <text x="36" y="150" class="hex dark-text">#F8F3EE</text>
+  </g>
+</svg>
