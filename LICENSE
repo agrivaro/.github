@@ -1,0 +1,17 @@
+Copyright (c) 2026 Groeneveld-ICT BV. All rights reserved.
+
+This repository is public so that GitHub can show the agrivaro organization
+profile and apply its defaults to the organization's other repositories. Being
+public does not make it open source. Unless a file says otherwise, everything
+in it -- text, templates and workflow code -- belongs to Groeneveld-ICT BV.
+
+No licence is granted by this file or by the repository being visible. Nobody
+may use, copy, modify, publish, distribute, sublicense or sell any part of it
+without written permission from Groeneveld-ICT BV, except for the viewing and
+forking on GitHub that GitHub's Terms of Service allow for public repositories.
+
+Third-party material keeps its own terms. The brand guard workflow runs the
+actions/checkout action, which is not part of this repository and is used under
+its own licence.
+
+Questions: info@groeneveld-ict.nl
