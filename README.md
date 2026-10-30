@@ -8,6 +8,8 @@ these files unless they define their own.
 | --- | --- |
 | `profile/README.md` | Shown on the organization's overview page. |
 | `PULL_REQUEST_TEMPLATE.md` | Default pull request template for every repository that does not have its own. |
+| `SECURITY.md` | Default vulnerability reporting route for every repository that does not have its own. |
+| `CONTRIBUTING.md` | Default contribution guide for every repository that does not have its own. |
 | `.github/workflows/brand-guard.yml` | Reusable workflow that keeps checked-in copies of the Agrivaro brand from drifting. |
 
 ## Calling the brand guard
@@ -33,7 +35,8 @@ jobs:
       asset_dirs: <directories with copied logo SVGs>
 ```
 
-Values for the current consumers, ready to paste:
+Values for the repositories whose brand copies pass the guard today, ready to
+paste:
 
 | Repository | `brand_files` | `asset_dirs` |
 | --- | --- | --- |
@@ -52,3 +55,17 @@ sha256sum ../branding/logos/*.svg   # macOS: shasum -a 256
 
 A stale pin does not break anything on its own, but it stops the guard from
 noticing that a consumer still copies an old revision.
+
+## Repository documents
+
+| File | What it covers |
+| --- | --- |
+| [`AGENTS.md`](AGENTS.md) | The rules for working here: public content, whom each file reaches, the brand pins |
+| [`ARCHITECTURE.md`](ARCHITECTURE.md) | How GitHub applies each file, and how the brand guard works |
+| [`CODE_STYLE.md`](CODE_STYLE.md) | Markdown and workflow conventions |
+| [`DESIGN_SYSTEM.md`](DESIGN_SYSTEM.md) | What this repository carries from `agrivaro/branding`, and what it must not invent |
+| [`PRD.md`](PRD.md) | What this repository is for, its requirements and open questions |
+| [`TESTING.md`](TESTING.md) | How to verify a change, since nothing here runs on its own push |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | How a change gets in, here and in other repositories by default |
+| [`SECURITY.md`](SECURITY.md) | How to report a vulnerability |
+| [`LICENSE`](LICENSE) | Proprietary; public visibility grants no licence |
